@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<body>
+    
+    <div class="entry-form">
+
+        <form action="" method="POST">
+
+            <h2 class='welcome'>Login Here</h2>
+
+                <div class="login">
+                    <input type="text" name="username" placeholder="Username">
+
+                    <input type="password" name="password" placeholder="Password">
+
+                    <button type="submit" id="login">Log In</button>
+                </div>
+
+                <br>
+                <br>
+
+            <div id="register">
+                <a href="{{ url_for('register') }}">Register Here</a>
+            </div>
+
+        </form>    
+    </div>
+
+</body>
+{% endblock %}
