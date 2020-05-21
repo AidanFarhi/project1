@@ -24,3 +24,9 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     return "Project 1: TODO"
+
+@app.route("/register") 
+def register():
+    return render_template('register.html')
+
+
