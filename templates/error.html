@@ -1,0 +1,23 @@
+{%  extends 'layout.html' %}
+{% block content %}
+
+<body>
+
+    <div class="top-banner">
+        <h1 id="welcome-message">Find a Good Book</h1>
+    </div>
+    
+    <br>
+    
+    <div class="entry-form">
+    
+        <h2 id="fail">Error: { message }</h2>
+    
+        <a href="{{ url_for( 'register' )}}">Back To Register</button>
+
+    </div>
+
+</body>
+
+
+{% endblock %}

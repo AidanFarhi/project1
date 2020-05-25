@@ -30,4 +30,29 @@ def index():
 def register():
     return render_template('register.html')
 
+@app.route("/create", methods=["GET", "POST"])  
+def create():
+    if request.method == 'POST':
+        user_count = 0        
+        # Check if user exists
+        user = request.form.get("user-name")
+        if db.execute("SELECT * FROM users WHERE username = :username", {"username": user}) == user:
+            return render_template('error.html', message='User already exists.')
+    
+        # Create new user
+        user_name = request.form.get("user-name")
+        password = request.form.get("password")
+        user_count += 1
+    
+        db.execute("INSERT INTO users (id, username, password) VALUES (:id, :username, :password)", {"id": user_count, "username": user_name, "password": password})
+        db.commit()
+
+        return render_template('success.html')
+
+@app.route("/search")
+def search():
+    pass
+
+
+
 
