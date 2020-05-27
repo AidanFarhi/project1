@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, request, render_template, url_for
+from flask import Flask, session, request, render_template, url_for, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -22,8 +22,21 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
+
+    # Check if user exists and password matches
+    if request.method == 'POST':
+        user_name = request.form.get("user-name")
+        password = request.form.get("password")
+        if db.execute("SELECT * FROM users WHERE username = :username", {"username":user_name}).rowcount == 0:
+            return render_template('error.html', message='Username not found.')
+        if db.execute("SELECT password FROM users WHERE username = :username", {"username":user_name}) != password:
+            return render_template('error.html', message='Password incorrect.')
+
+        # Takes user to search page
+        return render_template('search.html')            
+
     return render_template('index.html')
 
 @app.route("/register") 
@@ -32,26 +45,32 @@ def register():
 
 @app.route("/create", methods=["GET", "POST"])  
 def create():
-    if request.method == 'POST':
-        user_count = 0        
+
+    if request.method == 'POST':       
+
         # Check if user exists
         user = request.form.get("user-name")
-        if db.execute("SELECT * FROM users WHERE username = :username", {"username": user}) == user:
+        if db.execute("SELECT * FROM users WHERE username = :username", {"username": user}).rowcount > 0:
             return render_template('error.html', message='User already exists.')
     
         # Create new user
         user_name = request.form.get("user-name")
         password = request.form.get("password")
-        user_count += 1
+
+        if not user_name:
+            return render_template('error.html', message='Please enter a username.')
+        if not password:
+            return render_template('error.html', message='Please enter a password.')           
     
-        db.execute("INSERT INTO users (id, username, password) VALUES (:id, :username, :password)", {"id": user_count, "username": user_name, "password": password})
+        db.execute("INSERT INTO users (username, password) VALUES (:username, :password)", {"username": user_name, "password": password})
         db.commit()
 
         return render_template('success.html')
 
 @app.route("/search")
 def search():
-    pass
+    
+    return render_template('search.html')
 
 
 
