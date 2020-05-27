@@ -27,11 +27,18 @@ def index():
 
     # Check if user exists and password matches
     if request.method == 'POST':
-        user_name = request.form.get("user-name")
+        user_name = request.form.get("username")
         password = request.form.get("password")
-        if db.execute("SELECT * FROM users WHERE username = :username", {"username":user_name}).rowcount == 0:
+
+        # Check for empty input fields
+        if not user_name:
+            return render_template('error.html', message='Please enter a username.')
+        if not password:
+            return render_template('error.html', message='Please enter a password.')           
+
+        if db.execute("SELECT * FROM users WHERE username LIKE :username", {"username":user_name}).rowcount < 1:
             return render_template('error.html', message='Username not found.')
-        if db.execute("SELECT password FROM users WHERE username = :username", {"username":user_name}) != password:
+        if db.execute("SELECT * FROM users WHERE password LIKE :password", {"password":password}).rowcount < 1:
             return render_template('error.html', message='Password incorrect.')
 
         # Takes user to search page

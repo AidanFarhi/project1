@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<body>
+
+    <div class="top-banner">
+        <h1 id="welcome-message">Find a Good Book</h1>
+    </div>
+
+    <div>
+        <h4 class="login-top">Login</h4>
+    </div>
+
+    <br>
+
+    <div class="entry-form">
+
+        <form action="" method="POST">
+
+            <h2 class='welcome'>Search for a Book</h2>
+
+                <div class="login">
+                    <input type="text" name="username" placeholder="Username">
+
+                    <br>
+                    <br>
+
+                    <input type="password" name="password" placeholder="Password">
+
+                    <br>
+                    <br>
+
+                    <button type="submit" id="login">Log In</button>
+                </div>
+
+                <br>
+                <br>
+
+            <div id="register">
+                <a href="{{ url_for('register') }}">Register Here</a>
+            </div>
+
+        </form>    
+
+    </div>
+
+</body>
+{% endblock %}
