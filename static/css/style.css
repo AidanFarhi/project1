@@ -43,7 +43,7 @@ body {
     border-radius: 5px;
     color: white;
 }
-.button:hover {
+#login:hover {
     background-color: white;
     border-color: white;
     color: black;
@@ -58,9 +58,11 @@ a {
     border-radius: 5px;
     color: white;
     transition-duration: 0.4s;
+    padding: 5px 5px 5px 5px;
 }
 a:hover {
     color: black;
+    background-color: white;
 }
 .login-top {
     color: white;
@@ -80,4 +82,11 @@ a:hover {
     box-shadow: 0px 5px 5px rgb(80, 79, 79, 0.4);
     border-radius: 5px;
     color: white;
+}
+.results {
+    background-color: lightgray;
+    border-radius: 3px;
+}
+.underline {
+    border-bottom: 1px white;
 }

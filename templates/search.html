@@ -18,40 +18,49 @@
         <form action="{{ url_for( 'search' )}}" method="POST">
 
             <h2 class='welcome'>Search for a Book</h2>
-            
-                <input type="text" name="search" placeholder="Enter Search Here">
 
-                <br>
-                <br>
+            <p>You can search by Title, Author, Year, or ISBN. (Case Sensitive)</p>
+
+            
+            <input type="text" name="search" placeholder="Enter Search Here">
+
+            <br>
+            <br>
 
             <button type="submit" id="login">Search</button>
 
         </form>
 
-        <h3>Results</h3>
+        <br>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Year</th>
-                    <th>ISBN</th>
-                </tr>
-            </thead>
+        <div class="results">
+            <div class="underline">
+                <h3>Results</h3>
+            </div>
 
-            <tbody>
-                {% for book in result %}
-                <tr>
-                    <td>{{ book.title }}</td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.year }}</td>
-                    <td>{{ book.isbn }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Year</th>
+                        <th>ISBN</th>
+                    </tr>
+                </thead>
 
-        </table>
+                <tbody>
+                    {% for book in result %}
+                    <tr>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>{{ book.year }}</td>
+                        <td>{{ book.isbn }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>    
 
     </div>
 
