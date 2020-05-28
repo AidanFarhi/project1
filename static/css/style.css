@@ -4,6 +4,7 @@ body {
     background-image: url(https://img.freepik.com/free-photo/rows-books-library_73152-2680.jpg?size=626&ext=jpg);
     background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: scroll;
 }
 .top-banner {
     text-align: center;
@@ -86,7 +87,18 @@ a:hover {
 .results {
     background-color: lightgray;
     border-radius: 3px;
+    padding: 3px 3px 3px 3px;
+    box-shadow: 0px 5px 5px rgb(80, 79, 79, 0.4);
 }
-.underline {
+h3 {
+    color: black;
     border-bottom: 1px white;
+}
+table {
+    color: black;
+    border-collapse: collapse;
+}
+td, th {
+    border: 1px solid black;
+    padding: 0.5rem;
 }
