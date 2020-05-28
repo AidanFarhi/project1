@@ -74,10 +74,18 @@ def create():
 
         return render_template('success.html')
 
-@app.route("/search")
+@app.route("/search", methods=["GET", "POST"])
 def search():
     
-    return render_template('search.html')
+    if request.method == "POST":
+
+        query = request.form.get("search")
+
+        query = "%"+query+"%"
+        
+        result = db.execute("SELECT * FROM books WHERE isbn LIKE :search OR title LIKE :search OR author LIKE :search OR year LIKE :search", {"search":query}).fetchall() 
+        
+    return render_template('search.html', result=result)
 
 
 

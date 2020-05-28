@@ -15,32 +15,43 @@
 
     <div class="entry-form">
 
-        <form action="" method="POST">
+        <form action="{{ url_for( 'search' )}}" method="POST">
 
             <h2 class='welcome'>Search for a Book</h2>
-
-                <div class="login">
-                    <input type="text" name="username" placeholder="Username">
-
-                    <br>
-                    <br>
-
-                    <input type="password" name="password" placeholder="Password">
-
-                    <br>
-                    <br>
-
-                    <button type="submit" id="login">Log In</button>
-                </div>
+            
+                <input type="text" name="search" placeholder="Enter Search Here">
 
                 <br>
                 <br>
 
-            <div id="register">
-                <a href="{{ url_for('register') }}">Register Here</a>
-            </div>
+            <button type="submit" id="login">Search</button>
 
-        </form>    
+        </form>
+
+        <h3>Results</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>ISBN</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for book in result %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.year }}</td>
+                    <td>{{ book.isbn }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
 
     </div>
 
