@@ -1,4 +1,5 @@
 import os
+import requests
 
 from flask import Flask, session, request, render_template, url_for, jsonify
 from flask_session import Session
@@ -87,6 +88,21 @@ def search():
         
     return render_template('search.html', result=result)
 
+@app.route("/book/<isbn>", methods=["GET", "POST"])
+def book(isbn):
 
+    if request.method == "GET":
+        # Get information on book
+        book_info = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn", {"isbn": isbn})
 
+        # Get Goodreads data
+        good_reads = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "NVlsKWe7lx1wXlcROWxQQ", "isbns": isbn})
+        good_reads = good_reads.json()
+        avg_rating = good_reads['books'][0]['average_rating']
+        review_count = good_reads['books'][0]['work_ratings_count']
 
+        # Get information on reviews
+        review_data = db.execute("SELECT * FROM reviews")
+        
+
+        return render_template('book.html', book_info=book_info, review_data=review_data, avg_rating=avg_rating, review_count=review_count)

@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<body>
+
+    <div class="top-banner">
+        <h1 id="welcome-message">Find a Good Book</h1>
+    </div>
+    <div class="container">
+        <div class="book-data">
+
+            <h4>Book Information</h4>
+                <ul>
+                    {% for data in book_info %}
+                    <li>Title: {{ data.title }}</li>
+                    <li>Author: {{ data.author }}</li>
+                    <li>Year Written: {{ data.year }}</li>
+                    <li>ISBN: {{ data.isbn }}</li>
+                    <li>Goodreads Avg. Rating: {{ avg_rating }}</li>
+                    <li>Goodreads Review Count: {{ review_count}}</li>
+                </ul>
+                    {% endfor %}
+
+        </div>
+
+        <div id="reviews">
+            <h4>Reviews</h4>
+            <ul>
+                {% for data in review_data %}
+                <div id="user">
+                    <li>{{ data.username }}</li>
+                </div>
+                <div id="user-rating">
+                    <li>{{ data.rating }}</li>
+                </div>
+                <div id="user-review">
+                    <li>{{ data.review }}</li>
+                </div>           
+            </ul>    
+                {% endfor %}
+        </div>
+
+    </div>    
+
+
+</body>
+
+{% endblock %}

@@ -102,3 +102,12 @@ td, th {
     border: 1px solid black;
     padding: 0.5rem;
 }
+.book-data, #reviews {
+    background-color: cornflowerblue;
+    border: 1px solid darkblue;
+    margin: 0 auto;
+    margin-top: 15px;
+    width: 400px;
+    padding-left: 5px;
+    box-shadow: 0px 5px 5px rgb(80, 79, 79, 0.4);
+}
