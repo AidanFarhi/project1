@@ -114,6 +114,7 @@ def review():
         
         # Check if user has already made a review 
         if db.execute("SELECT * FROM reviews WHERE username LIKE :username", {"username": username}).rowcount() < 1:
+
             # Get review data from form
             rating = request.form.get("rating")    
             review_text = request.form.get("review-text")
@@ -136,3 +137,19 @@ def review():
             review_data = db.execute("SELECT * FROM reviews")
             
             return render_template('book.html', book_info=book_info, review_data=review_data, avg_rating=avg_rating, review_count=review_count, message="Success! Your Review has been submitted.")
+
+@app.route("/api/<isbn>", methods=["GET"])
+def api(isbn):
+
+    book_data = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+    if book_data is None:
+        return jsonify ({"error": "Invalid isbn"}), 422
+
+    return jsonify({
+        "title": book_data.title,
+        "author": book_data.author,
+        "year": book_data.year,
+        "isbn": book_data.isbn
+    })    
+            
+
