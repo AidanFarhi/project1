@@ -6,6 +6,11 @@
     <div class="top-banner">
         <h1 id="welcome-message">Find a Good Book</h1>
     </div>
+
+    <div>
+        <h4 class="login-top">Login</h4>
+    </div>
+
     <div class="container">
         <div class="book-data">
 
@@ -20,6 +25,40 @@
                     <li>Goodreads Review Count: {{ review_count}}</li>
                 </ul>
                     {% endfor %}
+
+        </div>
+
+        <div id="leave-review">
+            <form action="{{ url_for( 'create') }}" method="POST">
+
+                <h4>Leave a Review</h4>
+
+                <p>Rating</p>
+                <input type="radio" name="rating" id="1" value="1">
+                <label for="1">1</label>
+                <input type="radio" name="rating" id="2" value="2">
+                <label for="2">2</label>
+                <input type="radio" name="rating" id="3" value="3">
+                <label for="3">3</label>
+                <input type="radio" name="rating" id="4" value="4">
+                <label for="4">4</label>
+                <input type="radio" name="rating" id="5" value="5">
+                <label for="5">5</label>
+
+                <input type="hidden" name="isbn">
+
+                <br>
+                <br>
+
+                <input type="text" name="review-text" id="review-text" placeholder="Leave Review Here..">
+
+                <br>
+                <br>
+
+                <button type="submit" id="login">Leave Review</button>
+
+
+            </form>
 
         </div>
 
