@@ -42,6 +42,9 @@ def index():
         if db.execute("SELECT * FROM users WHERE password LIKE :password", {"password":password}).rowcount < 1:
             return render_template('error.html', message='Password incorrect.')
 
+        name_fetch = db.execute("SELECT * FROM users WHERE username = :username", {"username": user_name}).fetchone()
+        session["user_name"]
+
         # Takes user to search page
         return render_template('search.html')            
 
@@ -88,7 +91,7 @@ def search():
         
     return render_template('search.html', result=result)
 
-@app.route("/book/<isbn>", methods=["GET"])
+@app.route("/book/<isbn>", methods=["GET", "POST"])
 def book(isbn):
 
     if request.method == "GET":
@@ -107,21 +110,47 @@ def book(isbn):
         
         return render_template('book.html', book_info=book_info, review_data=review_data, avg_rating=avg_rating, review_count=review_count)
 
-@app.route("/review", methods=["POST"])
-def review():
-
     if request.method == "POST":
         
         # Check if user has already made a review 
-        if db.execute("SELECT * FROM reviews WHERE username LIKE :username", {"username": username}).rowcount() < 1:
+        if db.execute("SELECT * FROM reviews WHERE username = :username", {"username": session["user_name"]}).rowcount < 1:
 
             # Get review data from form
             rating = request.form.get("rating")    
             review_text = request.form.get("review-text")
-            isbn = request.form.get("isbn")
 
             # Add review to database
-            db.execute("INSERT INTO reviews (rating, review, username, isbn) VALUES (:rating, :review, :username, :isbn)", {"rating": rating, "review": review_text, "username": username, "isbn": isbn})
+            db.execute("INSERT INTO reviews (rating, review, isbn, username) VALUES (:rating, :review, :isbn, :username)", {"rating": rating, "review": review_text, "isbn": isbn, "username": session["user_name"]})
+            db.commit()
+
+            # Get information on book
+            book_info = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn", {"isbn": isbn})
+
+            # Get Goodreads data
+            good_reads = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "NVlsKWe7lx1wXlcROWxQQ", "isbns": isbn})
+            good_reads = good_reads.json()
+            avg_rating = good_reads['books'][0]['average_rating']
+            review_count = good_reads['books'][0]['work_ratings_count']
+
+            # Get information on existing reviews
+            review_data = db.execute("SELECT * FROM reviews")
+            
+            return render_template('book.html', book_info=book_info, review_data=review_data, avg_rating=avg_rating, review_count=review_count, message="Success! Your Review has been submitted.")
+
+@app.route("/review/<isbn>", methods=["POST"])
+def review(isbn):
+
+    if request.method == "POST":
+        
+        # Check if user has already made a review 
+        if db.execute("SELECT * FROM reviews WHERE username = :username", {"username": session["user_name"]}).rowcount < 1:
+
+            # Get review data from form
+            rating = request.form.get("rating")    
+            review_text = request.form.get("review-text")
+
+            # Add review to database
+            db.execute("INSERT INTO reviews (rating, review, isbn, username) VALUES (:rating, :review, :isbn, :username)", {"rating": rating, "review": review_text, "isbn": isbn, "username": session["user_name"]})
             db.commit()
 
             # Get information on book
@@ -141,15 +170,25 @@ def review():
 @app.route("/api/<isbn>", methods=["GET"])
 def api(isbn):
 
+    # Get book data from database
     book_data = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
     if book_data is None:
         return jsonify ({"error": "Invalid isbn"}), 422
 
+    # Get book data from Goodreads
+    good_reads = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "NVlsKWe7lx1wXlcROWxQQ", "isbns": isbn})
+    good_reads = good_reads.json()
+    avg_rating = good_reads['books'][0]['average_rating']
+    review_count = good_reads['books'][0]['work_ratings_count']
+
+    # Serves JSON response
     return jsonify({
         "title": book_data.title,
         "author": book_data.author,
         "year": book_data.year,
-        "isbn": book_data.isbn
+        "isbn": book_data.isbn,
+        "review_count": review_count,
+        "average_score": avg_rating
     })    
             
 

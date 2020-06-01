@@ -33,7 +33,7 @@
         </div>
 
         <div id="leave-review">
-            <form action="{{ url_for( 'review') }}" method="POST">
+            <form action="{{ url_for( 'review', isbn=book_info.isbn ) }}" method="POST">
 
                 <h4>Leave a Review</h4>
 
