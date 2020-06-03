@@ -96,19 +96,6 @@ h3 {
     color: black;
     border-bottom: 1px white;
 }
-table {
-    color: black;
-    border-collapse: collapse;
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 10px;
-}
-td, th {
-    border: 1px solid black;
-}
-td {
-    padding: 7px;
-}
 .book-data, #reviews, #leave-review {
     border: 1px solid tan;
     border-radius: 2px;
@@ -128,6 +115,10 @@ td {
 }
 #review-table, #review-table tr, #review-table th, #review-table td {
     border: none;
+    border-collapse: collapse;
     margin-bottom: 10px;
     text-align: left;
+}
+#results-table, #results-table tr, #results-table th, #results-table td {
+    border: none;
 }

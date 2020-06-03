@@ -39,8 +39,9 @@
         <div class="underline">
             <h3>Results</h3>
         </div>
-        
+           
         <table id="results-table">
+            
             <thead>
                 <tr>
                     <th>Title</th>
@@ -51,19 +52,21 @@
             </thead>
 
             <tbody>
-                {% for book in result %}
+            {% for book in result %}     
                 <tr>
                     <td><a href="{{ url_for( 'book', isbn=book.isbn ) }}" id="book-link">{{ book.title }}</a></td>
                     <td>{{ book.author }}</td>
                     <td>{{ book.year }}</td>
                     <td>{{ book.isbn }}</td>
                 </tr>
-                {% endfor %}
+                
             </tbody>
-
+            {% endfor %}    
         </table>
         
     </div>    
+
+        
 
 </body>
 {% endblock %}
