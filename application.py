@@ -43,7 +43,7 @@ def index():
             return render_template('error.html', message='Password incorrect.')
 
         name_fetch = db.execute("SELECT * FROM users WHERE username = :username", {"username": user_name}).fetchone()
-        session["user_name"]
+        session["user_name"] = name_fetch.username
 
         # Takes user to search page
         return render_template('search.html')            
@@ -98,6 +98,8 @@ def book(isbn):
 
         # Get information on book
         book_info = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn", {"isbn": isbn})
+        book_id = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+        session["book_id"] = book_id.isbn
 
         # Get Goodreads data
         good_reads = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "NVlsKWe7lx1wXlcROWxQQ", "isbns": isbn})
@@ -106,66 +108,9 @@ def book(isbn):
         review_count = good_reads['books'][0]['work_ratings_count']
 
         # Get information on existing reviews
-        review_data = db.execute("SELECT * FROM reviews")
+        review_data = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", {"isbn": session["book_id"]})
         
         return render_template('book.html', book_info=book_info, review_data=review_data, avg_rating=avg_rating, review_count=review_count)
-
-    if request.method == "POST":
-        
-        # Check if user has already made a review 
-        if db.execute("SELECT * FROM reviews WHERE username = :username", {"username": session["user_name"]}).rowcount < 1:
-
-            # Get review data from form
-            rating = request.form.get("rating")    
-            review_text = request.form.get("review-text")
-
-            # Add review to database
-            db.execute("INSERT INTO reviews (rating, review, isbn, username) VALUES (:rating, :review, :isbn, :username)", {"rating": rating, "review": review_text, "isbn": isbn, "username": session["user_name"]})
-            db.commit()
-
-            # Get information on book
-            book_info = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn", {"isbn": isbn})
-
-            # Get Goodreads data
-            good_reads = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "NVlsKWe7lx1wXlcROWxQQ", "isbns": isbn})
-            good_reads = good_reads.json()
-            avg_rating = good_reads['books'][0]['average_rating']
-            review_count = good_reads['books'][0]['work_ratings_count']
-
-            # Get information on existing reviews
-            review_data = db.execute("SELECT * FROM reviews")
-            
-            return render_template('book.html', book_info=book_info, review_data=review_data, avg_rating=avg_rating, review_count=review_count, message="Success! Your Review has been submitted.")
-
-@app.route("/review/<isbn>", methods=["POST"])
-def review(isbn):
-
-    if request.method == "POST":
-        
-        # Check if user has already made a review 
-        if db.execute("SELECT * FROM reviews WHERE username = :username", {"username": session["user_name"]}).rowcount < 1:
-
-            # Get review data from form
-            rating = request.form.get("rating")    
-            review_text = request.form.get("review-text")
-
-            # Add review to database
-            db.execute("INSERT INTO reviews (rating, review, isbn, username) VALUES (:rating, :review, :isbn, :username)", {"rating": rating, "review": review_text, "isbn": isbn, "username": session["user_name"]})
-            db.commit()
-
-            # Get information on book
-            book_info = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn", {"isbn": isbn})
-
-            # Get Goodreads data
-            good_reads = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "NVlsKWe7lx1wXlcROWxQQ", "isbns": isbn})
-            good_reads = good_reads.json()
-            avg_rating = good_reads['books'][0]['average_rating']
-            review_count = good_reads['books'][0]['work_ratings_count']
-
-            # Get information on existing reviews
-            review_data = db.execute("SELECT * FROM reviews")
-            
-            return render_template('book.html', book_info=book_info, review_data=review_data, avg_rating=avg_rating, review_count=review_count, message="Success! Your Review has been submitted.")
 
 @app.route("/api/<isbn>", methods=["GET"])
 def api(isbn):
@@ -190,5 +135,24 @@ def api(isbn):
         "review_count": review_count,
         "average_score": avg_rating
     })    
-            
 
+@app.route("/review", methods=["POST"])
+def review():
+       
+    # Check if user has already made a review 
+    if db.execute("SELECT * FROM reviews WHERE username = :username AND isbn = :isbn", {"username": session["user_name"], "isbn": session["book_id"]}).rowcount < 1:
+
+        # Get review data from form
+        rating = request.form.get("rating")    
+        review_text = request.form.get("review-text")
+        isbn = session["book_id"]
+
+        # Add review to database
+        db.execute("INSERT INTO reviews (rating, review, isbn, username) VALUES (:rating, :review, :isbn, :username)", {"rating": rating, "review": review_text, "isbn": session["book_id"], "username": session["user_name"]})
+        db.commit()
+        
+        return render_template('result.html', isbn=isbn, message="Success! Your Review has been submitted.")       
+
+    else:
+        isbn = session["book_id"]
+        return render_template('result.html', isbn=isbn, message="You have already submitted a review.")    

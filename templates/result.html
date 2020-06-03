@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<body>
+    
+    <div class="top-banner">
+        <h1 id="welcome-message">Find a Good Book</h1>
+    </div>
+
+    <div>
+        <h4 class="login-top">Login</h4>
+    </div>
+
+    <div>
+        <h2>{{ message }}</h2>
+    </div>
+
+    <a href="{{ url_for( 'book', isbn=isbn )}}">Back to Book</a>
+
+</body>
+
+{% endblock %}
