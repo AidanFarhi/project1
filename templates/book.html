@@ -66,18 +66,24 @@
 
         <div id="reviews">
             <h4>Reviews</h4>
-            <ul>
+
+            <table id="review-table">
                 {% for data in review_data %}
-                <div id="user">
-                    <li>User: {{ data.username }}</li>
-                </div>
-                <div id="user-rating">
-                    <li>Rating: {{ data.rating }}</li>
-                </div>
-                <div id="user-review">
-                    <li>{{ data.review }}</li>
-                </div>           
-            </ul>    
+                <thead>
+                    <tr>
+                        <th>{{ data.username }}</th>
+                        <th>rating: {{ data.rating}}/5</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>{{ data.review }}</td>
+                    </tr>
+                </tbody>
+
+                <br>
+
                 {% endfor %}
         </div>
 
