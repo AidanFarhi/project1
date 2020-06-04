@@ -64,16 +64,15 @@ a:hover {
     color: black;
     background-color: white;
 }
-.login-top {
+.top-right-message {
     color:black;
-    text-align: center;
-    height: 23px;
-    width: 50px;
     position: absolute;
-    left: 85%;
-    top: 13px;
-    border-left: 1px solid tan;
-    padding: 5px;
+    text-align: center;
+    top: 0;
+    right: 0;
+    padding-right: 5%;
+    padding-top: 3.5%;
+    padding-left: 10px;
 }
 .button {
     transition-duration: 0.4s;
@@ -118,7 +117,20 @@ h3 {
     border-collapse: collapse;
     margin-bottom: 10px;
     text-align: left;
+    padding: 3px;
 }
 #results-table, #results-table tr, #results-table th, #results-table td {
     border: none;
+    padding: 5px;
+}
+#error-message-div{
+    padding-bottom: 30px;
+}
+#search-button {
+    position: absolute;
+    text-align: center;
+    top: 0;
+    left: 0;
+    margin-top: 6.6%;
+    margin-left: 4%;
 }

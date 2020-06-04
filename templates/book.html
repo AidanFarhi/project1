@@ -5,14 +5,12 @@
 
     <div class="top-banner">
         <h1 id="welcome-message">Find a Good Book</h1>
-    </div>
+    
+        <h4 class="top-right-message"><a href="{{ url_for( 'logout' ) }}" class="logout-button">Logout</a></h4>
+    
 
-    <div>
-        <h4 class="login-top">Login</h4>
-    </div>
+        <a href="{{ url_for( 'search' ) }}" id="search-button">Search Again</a>
 
-    <div>
-        <h2>{{ message }}</h2>
     </div>
 
     <div class="container">
@@ -72,6 +70,8 @@
                 <thead>
                     <tr>
                         <th>{{ data.username }}</th>
+                    </tr>
+                    <tr>
                         <th>rating: {{ data.rating}}/5</th>
                     </tr>
                 </thead>

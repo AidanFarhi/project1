@@ -80,6 +80,10 @@ def create():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
+
+    if request.method == "GET":
+
+        return render_template('search.html')
     
     if request.method == "POST":
 
@@ -156,3 +160,11 @@ def review():
     else:
         isbn = session["book_id"]
         return render_template('result.html', isbn=isbn, message="You have already submitted a review.")    
+
+@app.route("/logout")
+def logout():
+
+    # Forget session id
+    session.pop('user_name')
+
+    return render_template('logout.html')        
